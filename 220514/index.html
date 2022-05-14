@@ -74,10 +74,12 @@
       this.material;
       this.boxGeometry;
       this.box;
+      this.boxArray;
       this.sphereGeometry;
       this.sphere;
       this.torusGeometry;
       this.torus;
+      this.torusArray;
       this.coneGeometry;
       this.cone;
       this.controls;
@@ -146,19 +148,33 @@
 
       this.material = new THREE.MeshPhongMaterial(App3.MATERIAL_PARAM);
 
-      const TORUS_COUNT = 10;
-      const TRANSFORM_SCALE = 5.0;
-      this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
-      this.torusArray = [];
-      for (let i = 0; i < TORUS_COUNT; ++i) {
-        const torus = new THREE.Mesh(this.torusGeometry, this.material);
-        torus.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
-        torus.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
-        torus.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+      const BOX_COUNT = 100;
+      const TRANSFORM_SCALE = 4;
+      this.boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      this.boxArray = [];
+      for(let i = 0; i < BOX_COUNT; ++i) {
+        const box = new THREE.Mesh(this.boxGeometry, this.material);
+        box.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+        box.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+        box.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
 
-        this.scene.add(torus);
-        this.torusArray.push(torus);
+        this.scene.add(box);
+        this.boxArray.push(box);
       }
+
+      // const TORUS_COUNT = 10;
+      // const TRANSFORM_SCALE = 5.0;
+      // this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
+      // this.torusArray = [];
+      // for (let i = 0; i < TORUS_COUNT; ++i) {
+      //  const torus = new THREE.Mesh(this.torusGeometry, this.material);
+      //  torus.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+      //  torus.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+      //  torus.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+
+      //  this.scene.add(torus);
+      //  this.torusArray.push(torus);
+      // }
 
       // this.boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
       // this.box = new THREE.Mesh(this.boxGeometry, this.material);
@@ -206,9 +222,9 @@
       this.stats.update();
         
       if (this.isDown === true) {
-          // this.box.rotation.y += 0.05;
+          this.box.rotation.y += 0.05;
           // this.sphere.rotation.y += 0.05;
-          this.torus.rotation.y += 0.05;
+          // this.torus.rotation.y += 0.05;
           // this.cone.rotation.y += 0.05;
         }
       
