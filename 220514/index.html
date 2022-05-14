@@ -15,12 +15,7 @@
 
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-
-      const app = new App3();
-
-      app.init();
-
-      app.render();
+      init();
   },false);
 
   class App3 {
@@ -54,6 +49,16 @@
       };
     }
 
+    static get AMBIENT_LIGHT_PARAM() {
+      return {
+        color: 0xffffff,
+        intensity: 1.0,
+        x: 1.0,
+        y: 1.0,
+        z: 1.0
+      };
+    }
+
     static get MATERIAL_PARAM() {
       return {
         color: 0x3399ff,
@@ -65,6 +70,7 @@
       this.scene;
       this.camera;
       this.directionalLight;
+      this.ambientLight;
       this.geometry;
       this.material;
       this.box;
@@ -120,8 +126,14 @@
       );
       this.scene.add(this.directionalLight);
 
+      this.ambientLight = new THREE.AmbientLight(
+        App3.AMBIENT_LIGHT_PARAM.color,
+        App3.AMBIENT_LIGHT_PARAM.intensity,
+      );
+      this.scene.add(this.ambientLight);
+
       this.geometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-      this.material = new THREE.MeshLambertMaterial(App3.MATERIAL_PARAM);
+      this.material = new THREE.MeshPhongMaterial(App3.MATERIAL_PARAM);
 
       this.box = new THREE.Mesh(this.geometry, this.material);
       this.scene.add(this.box);
@@ -159,6 +171,15 @@
       this.renderer.render(this.scene, this.camera);
     }
   } 
+
+  function init() {
+      
+      const app = new App3();
+
+      app.init();
+
+      app.render();
+  }
 
 </script>
 </body>
