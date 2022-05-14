@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>WebGL</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/16/Stats.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.js"></script>
   <style>* {margin: 0; padding: 0;}html, body { overflow: hidden;}</style>
@@ -55,6 +56,8 @@
       this.geometry;
       this.material;
       this.box;
+      this.controls;
+      this.render = this.render.bind(this);
     }
 
     init() {
@@ -84,9 +87,15 @@
 
       this.box = new THREE.Mesh(this.geometry, this.material);
       this.scene.add(this.box);
+
+      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
     }
 
     render() {
+      requestAnimationFrame(this.render);
+
+      this.controls.update();
+
       this.renderer.render(this.scene, this.camera);
     }
   } 
