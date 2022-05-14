@@ -82,20 +82,20 @@
       this.torusArray;
       this.coneGeometry;
       this.cone;
-      this.controls;
+//      this.controls;
       this.axesHelper;
       this.stats;
-      this.isDown = false;
-      this.render = this.render.bind(this);
+//      this.isDown = false;
+//      this.render = this.render.bind(this);
 
-      window.addEventListener('keydown', e => {
-        switch (e.key) {
-          case ' ':
-              this.isDown = true;
-              break;
-          default:
-        }
-      }, false);
+//      window.addEventListener('keydown', e => {
+//        switch (e.key) {
+//          case ' ':
+//              this.isDown = true;
+//              break;
+//          default:
+//        }
+//      }, false);
       window.addEventListener('keyup', e => {
         this.isDown = false;
       }, false);
@@ -111,8 +111,8 @@
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setClearColor(new THREE.Color(App3.RENDERER_PARAM.clearColor));
       this.renderer.setSize(App3.RENDERER_PARAM.width, App3.RENDERER_PARAM.height);
-      const wrapper = document.getElementById('webgl');
-      wrapper.appendChild(this.renderer.domElement);
+//      const wrapper = document.getElementById('webgl');
+//      wrapper.appendChild(this.renderer.domElement);
 
       this.scene = new THREE.Scene();
 
@@ -195,13 +195,15 @@
       // this.cone.position.set(1.0, -1.0, 0.0);
 
 
-      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+//      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
       const axesBarLength = 5.0;
       this.axesHelper = new THREE.AxesHelper(axesBarLength);
       this.scene.add(this.axesHelper);
 
       this.stats = this.initStats();
+
+      return [this.renderer, this.scene, this.camera, this.boxArray];
     }
 
     initStats() {
@@ -214,42 +216,57 @@
       return stats;
     }
 
-    render() {
-      requestAnimationFrame(this.render);
-
-      this.controls.update();
-
-      this.stats.update();
-        
-      if (this.isDown === true) {
-          this.boxArray.forEach((box, index) => {
-            let scale;
-            if (index % 2 === 0) {
-              scale = -1;
-            } else {
-              scale = 1;  
-            }
-            box.rotation.x += (Math.random() / 5) * scale;
-            box.rotation.y += (Math.random() / 5) * scale;
-            box.rotation.z += (Math.random() / 5) * scale;
-          })
-          // this.box.rotation.y += 0.05;
-          // this.sphere.rotation.y += 0.05;
-          // this.torus.rotation.y += 0.05;
-          // this.cone.rotation.y += 0.05;
-        }
-      
-      this.renderer.render(this.scene, this.camera);
-    }
+//    render() {
+//      requestAnimationFrame(this.render);
+//
+//      this.controls.update();
+//
+//      this.stats.update();
+//        
+//      if (this.isDown === true) {
+//          this.boxArray.forEach((box, index) => {
+//            let scale;
+//            if (index % 2 === 0) {
+//              scale = -1;
+//            } else {
+//              scale = 1;  
+//            }
+//            box.rotation.x += (Math.random() / 5) * scale;
+//            box.rotation.y += (Math.random() / 5) * scale;
+//            box.rotation.z += (Math.random() / 5) * scale;
+//          })
+//          // this.box.rotation.y += 0.05;
+//          // this.sphere.rotation.y += 0.05;
+//          // this.torus.rotation.y += 0.05;
+//          // this.cone.rotation.y += 0.05;
+//        }
+//      
+//      this.renderer.render(this.scene, this.camera);
+//    }
   } 
 
   function init() {
-      
-      const app = new App3();
-
-      app.init();
-
-      app.render();
+    const app = new App3();
+    const [renderer, scene, camera, meshes] =  app.init();
+    document.getElementById('webgl').appendChild(renderer.domElement);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    const isDown = false;
+    render();
+    function render() {
+      requestAnimationFrame(render);
+      controls.update();
+      keyDown(meshes);
+      renderer.render(scene, camera);
+    };
+    function keyDown(attr) {
+        window.addEventListener('keydown', e => {
+          if (e.key == ' ') {
+            attr.forEach((item, index) => {
+             item.rotation.y += 0.05;
+            })
+          }
+        }, false);
+    };
   }
 
 </script>
