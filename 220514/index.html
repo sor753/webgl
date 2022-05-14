@@ -64,6 +64,18 @@
         color: 0x3399ff,
       };
     }
+    
+    static get COLOR_PARAM() {
+      return {
+        red: "Red",
+        orange: "Orange",
+        yellow: "Yellow",
+        green: "Green",
+        blue: "Blue",
+        violet: "Violet",
+        indigo: "Indigo"
+      };
+    }
 
     constructor() {
       this.renderer;
@@ -82,20 +94,7 @@
       this.torusArray;
       this.coneGeometry;
       this.cone;
-//      this.controls;
       this.axesHelper;
-      this.stats;
-//      this.isDown = false;
-//      this.render = this.render.bind(this);
-
-//      window.addEventListener('keydown', e => {
-//        switch (e.key) {
-//          case ' ':
-//              this.isDown = true;
-//              break;
-//          default:
-//        }
-//      }, false);
       window.addEventListener('keyup', e => {
         this.isDown = false;
       }, false);
@@ -111,8 +110,6 @@
       this.renderer = new THREE.WebGLRenderer();
       this.renderer.setClearColor(new THREE.Color(App3.RENDERER_PARAM.clearColor));
       this.renderer.setSize(App3.RENDERER_PARAM.width, App3.RENDERER_PARAM.height);
-//      const wrapper = document.getElementById('webgl');
-//      wrapper.appendChild(this.renderer.domElement);
 
       this.scene = new THREE.Scene();
 
@@ -148,12 +145,29 @@
 
       this.material = new THREE.MeshPhongMaterial(App3.MATERIAL_PARAM);
 
-      const BOX_COUNT = 100;
-      const TRANSFORM_SCALE = 4;
+      const BOX_COUNT = 1000;
+      const TRANSFORM_SCALE = 5;
       this.boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
       this.boxArray = [];
       for(let i = 0; i < BOX_COUNT; ++i) {
-        const box = new THREE.Mesh(this.boxGeometry, this.material);
+        let color;
+        if (i % 7 === 0) {
+          color = App3.COLOR_PARAM.red;
+        } else if (i % 7 === 1) {
+          color = App3.COLOR_PARAM.orange;
+        } else if (i % 7 === 2) {
+          color = App3.COLOR_PARAM.yellow;
+        } else if (i % 7 === 3) {
+          color = App3.COLOR_PARAM.green;
+        } else if (i % 7 === 4) {
+          color = App3.COLOR_PARAM.blue;
+        } else if (i % 7 === 5) {
+          color = App3.COLOR_PARAM.violet;
+        } else if (i % 7 === 6) {
+          color = App3.COLOR_PARAM.indigo;
+        }
+        const boxMaterial = new THREE.MeshPhongMaterial({ color: color})
+        const box = new THREE.Mesh(this.boxGeometry, boxMaterial);
         box.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
         box.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
         box.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
@@ -162,51 +176,48 @@
         this.boxArray.push(box);
       }
 
-      // const TORUS_COUNT = 10;
-      // const TRANSFORM_SCALE = 5.0;
-      // this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
-      // this.torusArray = [];
-      // for (let i = 0; i < TORUS_COUNT; ++i) {
-      //  const torus = new THREE.Mesh(this.torusGeometry, this.material);
-      //  torus.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
-      //  torus.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
-      //  torus.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
-
-      //  this.scene.add(torus);
-      //  this.torusArray.push(torus);
-      // }
-
-      // this.boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-      // this.box = new THREE.Mesh(this.boxGeometry, this.material);
-      // this.scene.add(this.box);
-      // this.sphereGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-      // this.sphere = new THREE.Mesh(this.sphereGeometry, this.material);
-      // this.scene.add(this.sphere);
-      // this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
-      // this.torus = new THREE.Mesh(this.torusGeometry, this.material);
-      // this.scene.add(this.torus);
-      // this.coneGeometry = new THREE.ConeGeometry(0.5, 1.0, 16);
-      // this.cone = new THREE.Mesh(this.coneGeometry, this.material);
-      // this.scene.add(this.cone);
-
-      // this.box.position.set(-1.0, 1.0, 0.0);
-      // this.sphere.position.set(1.0, 1.0, 0.0);
-      // this.torus.position.set(-1.0, -1.0, 0.0);
-      // this.cone.position.set(1.0, -1.0, 0.0);
-
-
-//      this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-
       const axesBarLength = 5.0;
       this.axesHelper = new THREE.AxesHelper(axesBarLength);
       this.scene.add(this.axesHelper);
 
-      this.stats = this.initStats();
-
       return [this.renderer, this.scene, this.camera, this.boxArray];
     }
+  } 
 
-    initStats() {
+  function init() {
+    const app = new App3();
+    const [renderer, scene, camera, meshes] =  app.init();
+    document.getElementById('webgl').appendChild(renderer.domElement);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    const stats = initStats();
+    const guiControls = new function() {
+      this.rotationSpeedX = 0.02;
+      this.rotationSpeedY = 0.02;
+      this.rotationSpeedZ = 0.02;
+    }
+    let gui = new dat.GUI();
+    gui.add(guiControls, 'rotationSpeedX', 0, 0.5);
+    gui.add(guiControls, 'rotationSpeedY', 0, 0.5);
+    gui.add(guiControls, 'rotationSpeedZ', 0, 0.5);
+    render();
+    function render() {
+      requestAnimationFrame(render);
+      controls.update();
+      stats.update();
+      meshes.forEach((item, index) => {
+        let scale = 1;
+        if (index % 3 === 0) {
+          scale = 3;
+        } else if ( index % 2 === 0) {
+          scale = scale * (-1);  
+        }
+        item.rotation.x += guiControls.rotationSpeedX * scale;
+        item.rotation.y += guiControls.rotationSpeedY * scale;
+        item.rotation.z += guiControls.rotationSpeedZ * scale;
+      })
+      renderer.render(scene, camera);
+    };
+    function initStats() {
       const stats = new Stats();
       stats.setMode(0);
       stats.domElement.style.position = 'absolute';
@@ -215,58 +226,6 @@
       document.getElementById("stats").appendChild(stats.domElement);
       return stats;
     }
-
-//    render() {
-//      requestAnimationFrame(this.render);
-//
-//      this.controls.update();
-//
-//      this.stats.update();
-//        
-//      if (this.isDown === true) {
-//          this.boxArray.forEach((box, index) => {
-//            let scale;
-//            if (index % 2 === 0) {
-//              scale = -1;
-//            } else {
-//              scale = 1;  
-//            }
-//            box.rotation.x += (Math.random() / 5) * scale;
-//            box.rotation.y += (Math.random() / 5) * scale;
-//            box.rotation.z += (Math.random() / 5) * scale;
-//          })
-//          // this.box.rotation.y += 0.05;
-//          // this.sphere.rotation.y += 0.05;
-//          // this.torus.rotation.y += 0.05;
-//          // this.cone.rotation.y += 0.05;
-//        }
-//      
-//      this.renderer.render(this.scene, this.camera);
-//    }
-  } 
-
-  function init() {
-    const app = new App3();
-    const [renderer, scene, camera, meshes] =  app.init();
-    document.getElementById('webgl').appendChild(renderer.domElement);
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    const isDown = false;
-    render();
-    function render() {
-      requestAnimationFrame(render);
-      controls.update();
-      keyDown(meshes);
-      renderer.render(scene, camera);
-    };
-    function keyDown(attr) {
-        window.addEventListener('keydown', e => {
-          if (e.key == ' ') {
-            attr.forEach((item, index) => {
-             item.rotation.y += 0.05;
-            })
-          }
-        }, false);
-    };
   }
 
 </script>
