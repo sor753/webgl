@@ -57,6 +57,7 @@
       this.material;
       this.box;
       this.controls;
+      this.axesHelper;
       this.render = this.render.bind(this);
     }
 
@@ -89,6 +90,10 @@
       this.scene.add(this.box);
 
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+
+      const axesBarLength = 5.0;
+      this.axesHelper = new THREE.AxesHelper(axesBarLength);
+      this.scene.add(this.axesHelper);
     }
 
     render() {
