@@ -71,9 +71,15 @@
       this.camera;
       this.directionalLight;
       this.ambientLight;
-      this.geometry;
       this.material;
+      this.boxGeometry;
       this.box;
+      this.sphereGeometry;
+      this.sphere;
+      this.torusGeometry;
+      this.torus;
+      this.coneGeometry;
+      this.cone;
       this.controls;
       this.axesHelper;
       this.stats;
@@ -132,11 +138,26 @@
       );
       this.scene.add(this.ambientLight);
 
-      this.geometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
       this.material = new THREE.MeshPhongMaterial(App3.MATERIAL_PARAM);
 
-      this.box = new THREE.Mesh(this.geometry, this.material);
+      this.boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+      this.box = new THREE.Mesh(this.boxGeometry, this.material);
       this.scene.add(this.box);
+      this.sphereGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+      this.sphere = new THREE.Mesh(this.sphereGeometry, this.material);
+      this.scene.add(this.sphere);
+      this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
+      this.torus = new THREE.Mesh(this.torusGeometry, this.material);
+      this.scene.add(this.torus);
+      this.coneGeometry = new THREE.ConeGeometry(0.5, 1.0, 16);
+      this.cone = new THREE.Mesh(this.coneGeometry, this.material);
+      this.scene.add(this.cone);
+
+      this.box.position.set(-1.0, 1.0, 0.0);
+      this.sphere.position.set(1.0, 1.0, 0.0);
+      this.torus.position.set(-1.0, -1.0, 0.0);
+      this.cone.position.set(1.0, -1.0, 0.0);
+
 
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
@@ -166,6 +187,9 @@
         
       if (this.isDown === true) {
           this.box.rotation.y += 0.05;
+          this.sphere.rotation.y += 0.05;
+          this.torus.rotation.y += 0.05;
+          this.cone.rotation.y += 0.05;
         }
       
       this.renderer.render(this.scene, this.camera);
