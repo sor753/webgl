@@ -11,10 +11,11 @@
 </head>
 <body>
   <div id="webgl"></div>
+  <div id="stats"></div>
 
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    
+
       const app = new App3();
 
       app.init();
@@ -58,7 +59,21 @@
       this.box;
       this.controls;
       this.axesHelper;
+      this.stats;
+      this.isDown = false;
       this.render = this.render.bind(this);
+
+      window.addEventListener('keydown', e => {
+        switch (e.key) {
+          case ' ':
+              this.isDown = true;
+              break;
+          default:
+        }
+      }, false);
+      window.addEventListener('keyup', e => {
+        this.isDown = false;
+      }, false);
     }
 
     init() {
@@ -94,6 +109,18 @@
       const axesBarLength = 5.0;
       this.axesHelper = new THREE.AxesHelper(axesBarLength);
       this.scene.add(this.axesHelper);
+
+      this.stats = this.initStats();
+    }
+
+    initStats() {
+      const stats = new Stats();
+      stats.setMode(0);
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.left = '0px';
+      stats.domElement.style.top = '0px';
+      document.getElementById("stats").appendChild(stats.domElement);
+      return stats;
     }
 
     render() {
@@ -101,9 +128,16 @@
 
       this.controls.update();
 
+      this.stats.update();
+        
+      if (this.isDown === true) {
+          this.box.rotation.y += 0.05;
+        }
+      
       this.renderer.render(this.scene, this.camera);
     }
   } 
+
 </script>
 </body>
 </html>
