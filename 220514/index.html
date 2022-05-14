@@ -222,7 +222,18 @@
       this.stats.update();
         
       if (this.isDown === true) {
-          this.box.rotation.y += 0.05;
+          this.boxArray.forEach((box, index) => {
+            let scale;
+            if (index % 2 === 0) {
+              scale = -1;
+            } else {
+              scale = 1;  
+            }
+            box.rotation.x += (Math.random() / 5) * scale;
+            box.rotation.y += (Math.random() / 5) * scale;
+            box.rotation.z += (Math.random() / 5) * scale;
+          })
+          // this.box.rotation.y += 0.05;
           // this.sphere.rotation.y += 0.05;
           // this.torus.rotation.y += 0.05;
           // this.cone.rotation.y += 0.05;
