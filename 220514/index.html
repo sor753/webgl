@@ -146,23 +146,37 @@
 
       this.material = new THREE.MeshPhongMaterial(App3.MATERIAL_PARAM);
 
-      this.boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-      this.box = new THREE.Mesh(this.boxGeometry, this.material);
-      this.scene.add(this.box);
-      this.sphereGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-      this.sphere = new THREE.Mesh(this.sphereGeometry, this.material);
-      this.scene.add(this.sphere);
+      const TORUS_COUNT = 10;
+      const TRANSFORM_SCALE = 5.0;
       this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
-      this.torus = new THREE.Mesh(this.torusGeometry, this.material);
-      this.scene.add(this.torus);
-      this.coneGeometry = new THREE.ConeGeometry(0.5, 1.0, 16);
-      this.cone = new THREE.Mesh(this.coneGeometry, this.material);
-      this.scene.add(this.cone);
+      this.torusArray = [];
+      for (let i = 0; i < TORUS_COUNT; ++i) {
+        const torus = new THREE.Mesh(this.torusGeometry, this.material);
+        torus.position.x = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+        torus.position.y = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
+        torus.position.z = (Math.random() * 2.0 - 1.0) * TRANSFORM_SCALE;
 
-      this.box.position.set(-1.0, 1.0, 0.0);
-      this.sphere.position.set(1.0, 1.0, 0.0);
-      this.torus.position.set(-1.0, -1.0, 0.0);
-      this.cone.position.set(1.0, -1.0, 0.0);
+        this.scene.add(torus);
+        this.torusArray.push(torus);
+      }
+
+      // this.boxGeometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+      // this.box = new THREE.Mesh(this.boxGeometry, this.material);
+      // this.scene.add(this.box);
+      // this.sphereGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+      // this.sphere = new THREE.Mesh(this.sphereGeometry, this.material);
+      // this.scene.add(this.sphere);
+      // this.torusGeometry = new THREE.TorusGeometry(0.5, 0.2, 8, 16);
+      // this.torus = new THREE.Mesh(this.torusGeometry, this.material);
+      // this.scene.add(this.torus);
+      // this.coneGeometry = new THREE.ConeGeometry(0.5, 1.0, 16);
+      // this.cone = new THREE.Mesh(this.coneGeometry, this.material);
+      // this.scene.add(this.cone);
+
+      // this.box.position.set(-1.0, 1.0, 0.0);
+      // this.sphere.position.set(1.0, 1.0, 0.0);
+      // this.torus.position.set(-1.0, -1.0, 0.0);
+      // this.cone.position.set(1.0, -1.0, 0.0);
 
 
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
