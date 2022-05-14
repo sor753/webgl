@@ -44,6 +44,16 @@
       };
     }
 
+    static get DIRECTIONAL_LIGHT_PARAM() {
+      return {
+        color: 0xffffff,
+        intensity: 1.0,
+        x: 1.0,
+        y: 1.0,
+        z: 1.0,
+      };
+    }
+
     static get MATERIAL_PARAM() {
       return {
         color: 0x3399ff,
@@ -54,6 +64,7 @@
       this.renderer;
       this.scene;
       this.camera;
+      this.directionalLight;
       this.geometry;
       this.material;
       this.box;
@@ -98,8 +109,19 @@
       );
       this.camera.lookAt(App3.CAMERA_PARAM.lookAt);
 
+      this.directionalLight = new THREE.DirectionalLight(
+        App3.DIRECTIONAL_LIGHT_PARAM.color,
+        App3.DIRECTIONAL_LIGHT_PARAM.intensity
+      );
+      this.directionalLight.position.set(
+        App3.DIRECTIONAL_LIGHT_PARAM.x,
+        App3.DIRECTIONAL_LIGHT_PARAM.y,
+        App3.DIRECTIONAL_LIGHT_PARAM.z,
+      );
+      this.scene.add(this.directionalLight);
+
       this.geometry = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-      this.material = new THREE.MeshBasicMaterial(App3.MATERIAL_PARAM);
+      this.material = new THREE.MeshLambertMaterial(App3.MATERIAL_PARAM);
 
       this.box = new THREE.Mesh(this.geometry, this.material);
       this.scene.add(this.box);
